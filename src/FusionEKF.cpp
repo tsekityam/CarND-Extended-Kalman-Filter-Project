@@ -84,6 +84,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
           0, 0, 1000, 0,
           0, 0, 0, 1000;
 
+    //the initial transition matrix F_
+    ekf_.F_ = MatrixXd(4, 4);
+    ekf_.F_ << 1, 0, 1, 0,
+          0, 1, 0, 1,
+          0, 0, 1, 0,
+          0, 0, 0, 1;
+
     // done initializing, no need to predict or update
     is_initialized_ = true;
     return;

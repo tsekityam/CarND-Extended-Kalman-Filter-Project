@@ -57,7 +57,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     /**
     TODO:
       * Initialize the state ekf_.x_ with the first measurement.
-      * Create the covariance matrix.
       * Remember: you'll need to convert radar from polar to cartesian coordinates.
     */
     // first measurement
@@ -77,6 +76,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       ekf_.x_[0] = measurement_pack.raw_measurements_[0];
       ekf_.x_[1] = measurement_pack.raw_measurements_[1];
     }
+
+    //state covariance matrix P
+    ekf_.P_ = MatrixXd(4, 4);
+    ekf_.P_ << 1, 0, 0, 0,
+          0, 1, 0, 0,
+          0, 0, 1000, 0,
+          0, 0, 0, 1000;
 
     // done initializing, no need to predict or update
     is_initialized_ = true;

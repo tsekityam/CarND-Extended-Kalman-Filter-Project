@@ -40,8 +40,38 @@ void KalmanFilter::Update(const VectorXd &z) {
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
-  /**
-  TODO:
-    * update the state by using Extended Kalman Filter equations
-  */
+  MatrixXd z_pred = MatrixXd(3, 1);
+  
+  //recover state parameters
+  float px = x_(0);
+  float py = x_(1);
+  float vx = x_(2);
+  float vy = x_(3);
+  
+  //pre-compute a set of terms to avoid repeated calculation
+  float c1 = px*px+py*py;
+  float c2 = sqrt(c1);
+  float c3 = px*vx+py*vy;
+
+  if(fabs(c1) < 0.0001 || fabs(px) < 0.0001){
+    std::cout << "CalculateJacobian () - Error - Division by Zero" << std::endl;
+    return;
+  }
+  
+  z_pred(0) = c2;
+  z_pred(1) = atan(py/px);
+  z_pred(2) = c3/c1;
+  
+  VectorXd y = z - z_pred;
+  MatrixXd Ht = H_.transpose();
+  MatrixXd S = H_ * P_ * Ht + R_;
+  MatrixXd Si = S.inverse();
+  MatrixXd PHt = P_ * Ht;
+  MatrixXd K = PHt * Si;
+  
+  //new estimate
+  x_ = x_ + (K * y);
+  long x_size = x_.size();
+  MatrixXd I = MatrixXd::Identity(x_size, x_size);
+  P_ = (I - K * H_) * P_;
 }

@@ -60,7 +60,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   }
   
   z_pred(0) = c2;
-  z_pred(1) = atan(py/px);
+  z_pred(1) = atan2(py, px);
   z_pred(2) = c3/c2;
   
   VectorXd y = z - z_pred;

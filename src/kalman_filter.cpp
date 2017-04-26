@@ -55,7 +55,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   float c3 = px*vx+py*vy;
 
   if(fabs(c1) < 0.0001 || fabs(px) < 0.0001){
-    std::cout << "CalculateJacobian () - Error - Division by Zero" << std::endl;
+    std::cout << "UpdateEKF () - Error - Division by Zero" << std::endl;
     return;
   }
   
